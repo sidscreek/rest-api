@@ -1,8 +1,25 @@
 // creating a rest api requires a framework such as rest 
 const express = require('express');
+const fs = require('fs');
 const users = require('./MOCK_DATA.json');
+
 const app = express();
 const PORT = 8001;
+//we have to apply a middleware so that express gets to know what type of data we are returning
+
+app.use(express.urlencoded({ extended: false}));
+//this is our middleware/plugin
+//jab bhi koi form data ayega yeh usko body mein daalne ka kaam karega 
+//yeh plugin data ko uthayega and uska js object bana dega 
+//like this 
+// //Body [Object: null prototype] {
+//     first_name: 'Siddhant ',
+//     last_name: 'Jain',
+//     email: 'siddhantjain027@gmail.com',
+//     gender: 'male',
+//     job_title: 'software dev'
+//   }
+  
 //define your route paths here 
 app.get('/users', (req,res) => {
     // if we have a lot of users hpw will the page look
@@ -35,7 +52,22 @@ app.get('/api/users/:id' , (req,res) => {
 //create a new user 
 app.post('/api/users', (req,res) => {
     //todo: create a new user 
-    return res.json({ status: "pending"});
+    const body = req.body;
+    //jo bhi data hum frontend se send karte h it is available in body 
+    console.log("Body",body);
+    //will print undefine 
+    //because express have no idea what type of data is being parsed
+    //we have to use a middleware 
+    //... also known as spread operator , append stuff
+    users.push({...body,id: users.length+1});
+    //id we have to specify explicitly 
+    //write this in the file 
+    fs.writeFile('./MOCK_DATA.json',JSON.stringify(users), (err, data) => {
+        return res.json({ status: "success" , id: users});
+
+    });
+
+    //after appending we have to write this in the file as well
 });
 
 //PATCH request -> edit user details 
@@ -45,9 +77,41 @@ app.patch("/api/users/:id" , (req,res) => {
 });
 
 //DELETE request ->delete user with their id 
+
+const userFilePath = './MOCK_DATA.json';
+//read user from the file 
+const readUser = () => {
+    const data = fs.readFile(userFilePath, 'utf8');
+    return JSON.parse(data);
+}
+
+const writeUser = (users) => {
+    fs.writeFile(userFilePath , JSON.stringify(users,null,2), 'utf8'); 
+}
 app.delete("/api/users/:id" , (req,res) => {
     //todo: delete that user after receving its id 
-    return res.json({ status: "pending"});
+    //extract its id 
+    const id = req.params.id;
+    //read the user from the file 
+    const users = readUser();
+    //find the id in the users in the users array 
+    const userInd = users.findIndex(user => user.id === id);
+    if(userInd != -1)
+    {
+        //remove the user from the array 
+        users.splice(userInd,1);
+        //write the updated array in the file
+        writeUser(users);
+
+        //give a success response 
+        return res.json({status: "Success" , message: "User deleted successfully!"});
+    }
+    else{
+
+    return res.json({ status: "Error" , message: "User not found"});
+
+    }
+
 });
 
 

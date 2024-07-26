@@ -28,4 +28,30 @@ basically it is a good practice to use all this
 
 so GET/users => GET/api/users
 
+POST /users - Create new user 
+now by default browser use GET request 
 
+
+so for GET request its pretty standard 
+but fot PATCH , POST and DELETE => we have to test them first for that we use POSTMAN 
+
+why are we using postman ?
+
+browsers only support GET requests , we need to test for other requests as well
+
+POSTMAN is a platform to test your APIS , gives you all the required data 
+
+Middleware : app.use(express.urlencoded({ extended: false}));
+//this is our middleware/plugin
+//jab bhi koi form data ayega yeh usko body mein daalne ka kaam karega 
+//yeh plugin data ko uthayega and uska js object bana dega 
+//like this 
+// //Body [Object: null prototype] {
+//     first_name: 'Siddhant ',
+//     last_name: 'Jain',
+//     email: 'siddhantjain027@gmail.com',
+//     gender: 'male',
+//     job_title: 'software dev'
+//   }
+  now our body has this data
+now isko we can add in our mock data.json file 
