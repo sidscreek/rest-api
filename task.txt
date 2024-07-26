@@ -55,3 +55,14 @@ Middleware : app.use(express.urlencoded({ extended: false}));
 //   }
   now our body has this data
 now isko we can add in our mock data.json file 
+
+
+
+in real world , our database Mongo DB (any) will send the id of the data depeding on the crud operations 
+
+
+to delete any thing the js logic :
+find the user and remove it from the array 
+write the updated array back in the json file
+send the appropriate response back to the client 
+

@@ -73,44 +73,60 @@ app.post('/api/users', (req,res) => {
 //PATCH request -> edit user details 
 app.patch("/api/users/:id" , (req,res) => {
     //todo: edit the user after receving its id 
-    return res.json({ status: "pending"}); 
+    //get the id 
+    const id = parseInt(req.params.id);
+    //find that user
+    const user  = users.find(user => user.id === id);
+    if(!user)
+    {
+        return res.json({status: "Errot" , message: "User not found"});
+    }
+
+    user.email = req.body.email;
+    
+    return res.json({ status: "updated"}); 
 });
 
 //DELETE request ->delete user with their id 
 
-const userFilePath = './MOCK_DATA.json';
-//read user from the file 
-const readUser = () => {
-    const data = fs.readFile(userFilePath, 'utf8');
-    return JSON.parse(data);
-}
+// const userFilePath = './MOCK_DATA.json';
+// //read user from the file 
+// const readUser = () => {
+//     const data = fs.readFile(userFilePath, 'utf8');
+//     return JSON.parse(data);
+// }
 
-const writeUser = (users) => {
-    fs.writeFile(userFilePath , JSON.stringify(users,null,2), 'utf8'); 
-}
+// const writeUser = (users) => {
+//     fs.writeFile(userFilePath , JSON.stringify(users,null,2),(err, data) => {
+//         return res.json({status: "Success" , message: "User deleted successfully!"});
+//     }); 
+// };
 app.delete("/api/users/:id" , (req,res) => {
     //todo: delete that user after receving its id 
     //extract its id 
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     //read the user from the file 
-    const users = readUser();
+    // const users = readUser();
     //find the id in the users in the users array 
+    const user = users.find(user=>user.id === id);
     const userInd = users.findIndex(user => user.id === id);
-    if(userInd != -1)
+    if(!user)
+    {
+        return res.status(404).json({message: 'User not found'});
+    }
+    else if(userInd != -1)
     {
         //remove the user from the array 
-        users.splice(userInd,1);
+       const deletedUser = users.splice(userInd,1);
         //write the updated array in the file
-        writeUser(users);
+        // writeUser(users);
+        return res.json(deletedUser);
+        // return res.json({status: "Success" , message: "User deleted successfully!"});
 
         //give a success response 
-        return res.json({status: "Success" , message: "User deleted successfully!"});
     }
-    else{
 
-    return res.json({ status: "Error" , message: "User not found"});
-
-    }
+      return res.json({ status: "Error" , message: "User not found"});
 
 });
 
