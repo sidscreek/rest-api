@@ -1,0 +1,31 @@
+we are designing a REST API - json
+
+GET / users -> list all the users 
+GET /api/users/1 - get the user with id 1
+GET /api/users/2 - get the user with id 2
+both 1 and 2 are dynamic paths paramenters 
+GET /api/users/:id - get the user with id
+
+:id -> variable 
+POST /users - Create new user 
+PATCH /users/2 - Edit the user with id: 1
+
+DELETE /users/2 - delete the user with id:2
+
+//we need data to perform all these 
+ 
+how to do it ?
+//frist import data (JSON file)
+//once we get the data frontend will render it depending on the framework
+
+
+for rest api 
+we need /api/users
+
+if GET /users -> render a html document 
+if GET /api/users -> will return a JSON file 
+basically it is a good practice to use all this 
+
+so GET/users => GET/api/users
+
+
